@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "OpenCode Quota",
+    "description": "Shows the OpenCode Go subscription quota for the 5-hour, weekly, and monthly windows, with reset countdowns."
+  }
+}

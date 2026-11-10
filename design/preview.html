@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>OpenCode 额度 · 视觉方案对比</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+/* ---------- sheet chrome ---------- */
+:root{--sheet-bg:#f2f3f5;--sheet-fg:#6b7280;--capt:#2f3238;--sheet-line:#dfe2e7}
+body[data-ds-dark-theme]{--sheet-bg:#0b0b0d;--sheet-fg:#8b8f98;--capt:#e6e8ec;--sheet-line:#22242a}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--sheet-bg);
+  color:var(--dsw-alias-label-primary);
+  font-family:"Segoe UI","Microsoft YaHei UI","PingFang SC",system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.sheet{width:1960px;margin:0 auto;padding:36px 40px 48px}
+.sheet-head{display:flex;align-items:baseline;justify-content:space-between;gap:24px;margin-bottom:26px}
+.sheet-title{font-size:20px;font-weight:600;letter-spacing:.2px;color:var(--capt)}
+.sheet-note{font-size:12px;line-height:18px;color:var(--sheet-fg);text-align:right}
+.grid{display:grid;grid-template-columns:920px 920px;gap:34px 40px}
+.cell{display:flex;flex-direction:column;gap:10px}
+.cap{display:flex;align-items:baseline;gap:10px;padding-left:2px}
+.cap-tag{font-size:12px;font-weight:600;letter-spacing:.6px;color:var(--capt);text-transform:uppercase}
+.cap-txt{font-size:12px;line-height:18px;color:var(--sheet-fg)}
+.cap-txt b{font-weight:600;color:var(--capt)}
+
+/* app frame */
+.frame{width:900px;height:780px;display:flex;border-radius:12px;overflow:hidden;
+  border:.5px solid var(--sheet-line);background:var(--dsw-alias-bg-base);
+  box-shadow:0 1px 2px #0000000d, 0 12px 32px #00000012}
+.rail{width:48px;flex:none;background:var(--dsw-specific-sidebar-fill);border-right:.5px solid var(--dsw-alias-border-l1);
+  display:flex;flex-direction:column;align-items:center;padding-top:13px;gap:10px}
+.rail-logo{width:24px;height:24px;border-radius:7px;background:var(--dsw-static-deepseek-450);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700}
+.rail-item{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  color:var(--dsw-alias-label-secondary);position:relative}
+.rail-item svg{width:16px;height:16px}
+.rail-item.active{background:var(--dsw-specific-sidebar-nav-item-active);color:var(--dsw-alias-label-primary)}
+.rail-spacer{flex:1}
+.main{flex:1;min-width:0;position:relative;display:flex;flex-direction:column}
+.page{flex:1;min-height:0;overflow:hidden;position:relative}
+.page > *{position:absolute;inset:0}
+.composer{flex:none;height:84px;border-top:.5px solid var(--dsw-alias-border-l1);
+  background:var(--dsw-alias-bg-base);padding:9px 20px 12px;display:flex;flex-direction:column;gap:7px}
+.dock-row{display:flex;align-items:center;min-height:20px}
+.inputbox{height:36px;border:.5px solid var(--dsw-alias-border-l2);border-radius:18px;
+  display:flex;align-items:center;padding:0 14px;color:var(--dsw-alias-label-secondary);font-size:12px;
+  background:var(--dsw-alias-bg-layer-1)}
+
+/* ================= CURRENT (copied from installed client.js) ================= */
+.ocq-page{box-sizing:border-box;height:100%;min-height:0;overflow-y:hidden;display:flex;flex-direction:column;align-items:center;gap:14px;padding:26px 48px 40px;background:var(--dsw-alias-bg-base)}
+.ocq-page>*{width:100%;max-width:860px}
+.ocq-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.ocq-title{font-size:16px;line-height:24px;font-weight:600;color:var(--dsw-alias-label-primary)}
+.ocq-sub{margin-top:4px;font-size:12px;line-height:18px;color:var(--dsw-alias-label-secondary)}
+.ocq-btn{flex:none;border:0.5px solid var(--dsw-alias-border-l2);border-radius:8px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);font-size:12px;line-height:18px;padding:5px 12px;cursor:pointer;font-family:inherit}
+.ocq-cards{display:flex;flex-direction:column;gap:10px}
+.ocq-card{border:0.5px solid var(--dsw-alias-border-l1);border-radius:10px;background:var(--dsw-alias-bg-layer-1);padding:14px 16px;display:flex;flex-direction:column;gap:9px}
+.ocq-card-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.ocq-card-name{font-size:13px;line-height:20px;font-weight:500;color:var(--dsw-alias-label-primary)}
+.ocq-card-value{display:flex;align-items:baseline;gap:6px;font-variant-numeric:tabular-nums}
+.ocq-card-remaining{font-size:22px;line-height:26px;font-weight:600;color:var(--ocq-tone,var(--dsw-alias-label-primary))}
+.ocq-card-unit{font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary)}
+.ocq-bar{height:6px;border-radius:999px;background:var(--dsw-alias-bg-layer-2);overflow:hidden}
+.ocq-bar-fill{height:100%;border-radius:999px;background:var(--ocq-tone,var(--dsw-alias-state-idle-primary))}
+.ocq-meta{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.ocq-section{display:flex;flex-direction:column;gap:8px}
+.ocq-section-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ocq-section-title{font-size:13px;line-height:20px;font-weight:600;color:var(--dsw-alias-label-primary)}
+.ocq-section-note{font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary)}
+.ocq-forecast-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+.ocq-forecast-item{border:0.5px solid var(--dsw-alias-border-l1);border-radius:10px;background:var(--dsw-alias-bg-layer-1);padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+.ocq-forecast-name{font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary)}
+.ocq-forecast-value{font-size:14px;line-height:20px;font-weight:600;color:var(--dsw-alias-label-primary);font-variant-numeric:tabular-nums}
+.ocq-forecast-note{font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.ocq-danger{color:var(--dsw-alias-state-error-primary)}
+.ocq-setting{display:flex;align-items:center;justify-content:space-between;gap:16px;border:0.5px solid var(--dsw-alias-border-l1);border-radius:10px;background:var(--dsw-alias-bg-layer-1);padding:12px 16px}
+.ocq-setting-label{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ocq-setting-title{font-size:13px;line-height:20px;color:var(--dsw-alias-label-primary)}
+.ocq-setting-desc{font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary)}
+.ocq-switch{position:relative;flex:none;width:36px;height:20px;border-radius:999px;border:none;padding:0;background:var(--dsw-alias-bg-layer-2);cursor:pointer}
+.ocq-switch[aria-checked="true"]{background:var(--dsw-alias-brand-primary)}
+.ocq-switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--dsw-alias-bg-base)}
+.ocq-switch[aria-checked="true"]::after{transform:translateX(16px)}
+.ocq-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.ocq-dock{display:flex;justify-content:flex-start;align-items:center;gap:6px;font-family:inherit}
+.ocq-chip{display:inline-flex;align-items:center;gap:6px;border:0.5px solid var(--dsw-alias-border-l1);border-radius:999px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-secondary);font-size:11px;line-height:16px;padding:1px 9px;cursor:pointer;font-family:inherit}
+.ocq-chip-dot{width:6px;height:6px;border-radius:50%;flex:none;background:var(--ocq-tone,var(--dsw-alias-state-idle-primary))}
+.ocq-chip-value{font-variant-numeric:tabular-nums;font-weight:500;color:var(--dsw-alias-label-primary)}
+
+/* ================= OPTION A — calm instrument ================= */
+.tone-ok{--tone:var(--dsw-alias-state-success-primary)}
+.tone-warn{--tone:var(--dsw-alias-state-warn-primary)}
+.tone-bad{--tone:var(--dsw-alias-state-error-primary)}
+.a-page{height:100%;padding:22px 48px 16px;display:flex;flex-direction:column;background:var(--dsw-alias-bg-base)}
+.a-head{display:flex;align-items:center;gap:12px}
+.a-title{font-size:15px;font-weight:600;letter-spacing:.2px;color:var(--dsw-alias-label-primary)}
+.a-updated{margin-left:auto;font-size:11px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.a-iconbtn{width:26px;height:26px;border-radius:8px;border:none;background:transparent;color:var(--dsw-alias-label-secondary);
+  display:flex;align-items:center;justify-content:center;cursor:pointer}
+.a-iconbtn svg{width:15px;height:15px}
+.a-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;padding-bottom:4px}
+.a-panel{display:grid;grid-template-columns:repeat(3,1fr);background:var(--dsw-alias-bg-layer-1);
+  border:.5px solid var(--dsw-alias-border-l1);border-radius:18px;padding:34px 8px 30px}
+.a-cell{display:flex;flex-direction:column;align-items:center;gap:12px;position:relative;padding:0 6px}
+.a-cell+.a-cell{border-left:.5px solid var(--dsw-alias-border-l1)}
+.a-name{font-size:12.5px;font-weight:500;color:var(--dsw-alias-label-secondary);letter-spacing:.3px}
+.a-ringwrap{position:relative;width:150px;height:150px}
+.a-ring{display:block;transform:rotate(-90deg)}
+.a-track{fill:none;stroke:var(--dsw-alias-bg-layer-2);stroke-width:8}
+.a-arc{fill:none;stroke:var(--tone);stroke-width:8;stroke-linecap:round}
+.a-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.a-center .line{display:flex;align-items:baseline}
+.a-num{font-size:34px;line-height:36px;font-weight:600;color:var(--dsw-alias-label-primary);font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.a-pct{font-size:13px;color:var(--dsw-alias-label-secondary);margin-left:1px}
+.a-cap{font-size:10px;line-height:14px;color:var(--dsw-alias-label-secondary);letter-spacing:1px;margin-top:2px}
+.a-reset{font-size:11.5px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.a-reset b{font-weight:500;color:var(--dsw-alias-label-primary)}
+.a-forecast{display:inline-flex;align-items:baseline;gap:5px;font-size:11px;line-height:16px;
+  color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.a-forecast b{font-weight:600;font-size:11.5px;color:var(--dsw-alias-label-primary)}
+.a-forecast.danger b{color:var(--dsw-alias-state-error-primary)}
+.a-forecast .warnmark{width:2px;height:2px}
+.a-flag{font-size:10px;line-height:17px;padding:0 8px;border-radius:999px;color:var(--dsw-alias-state-error-primary);
+  background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 13%,transparent);font-weight:500;letter-spacing:.3px}
+.a-setting{display:flex;align-items:center;gap:14px;padding:11px 18px;border-radius:12px;
+  border:.5px solid var(--dsw-alias-border-l1);background:var(--dsw-alias-bg-layer-1)}
+.a-setting span{font-size:12px;color:var(--dsw-alias-label-primary)}
+.a-setting .sp{flex:1}
+.a-switch{position:relative;flex:none;width:36px;height:20px;border-radius:999px;border:none;padding:0;
+  background:var(--dsw-alias-brand-primary);cursor:pointer}
+.a-switch::after{content:"";position:absolute;top:2px;left:18px;width:16px;height:16px;border-radius:50%;background:var(--dsw-alias-bg-base)}
+.a-foot{display:flex;justify-content:space-between;font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary);padding:0 2px}
+.rail-dot{position:absolute;top:6px;right:6px;width:5px;height:5px;border-radius:50%;background:var(--dsw-alias-state-warn-primary)}
+#optA .rail-item.active::after{content:"";position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;
+  background:var(--dsw-alias-state-warn-primary);box-shadow:0 0 0 1.5px var(--dsw-specific-sidebar-fill)}
+
+/* option A dock: one quiet readout */
+.dockA{display:inline-flex;align-items:center;gap:0;border:.5px solid var(--dsw-alias-border-l1);
+  border-radius:999px;background:var(--dsw-alias-bg-layer-1);padding:2px 4px;font-size:11px;line-height:16px;
+  color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums;cursor:pointer}
+.dockA i{width:5px;height:5px;border-radius:50%;background:var(--tone);display:inline-block;margin-right:5px;vertical-align:1px}
+.dockA .seg{padding:1px 9px;display:inline-flex;align-items:center}
+.dockA .seg+.seg{box-shadow:-1px 0 0 var(--dsw-alias-border-l1)}
+.dockA b{font-weight:500;color:var(--dsw-alias-label-primary);margin-left:4px}
+
+/* ================= OPTION B — hero + rows ================= */
+.b-page{height:100%;padding:22px 48px 16px;display:flex;flex-direction:column;background:var(--dsw-alias-bg-base)}
+.b-head{display:flex;align-items:center;gap:10px}
+.b-title{font-size:15px;font-weight:600;color:var(--dsw-alias-label-primary)}
+.b-head .sp{flex:1}
+.b-updated{font-size:11px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.b-refresh{border:.5px solid var(--dsw-alias-border-l2);background:transparent;color:var(--dsw-alias-label-secondary);
+  font-size:11px;line-height:16px;padding:3px 10px;border-radius:999px;cursor:pointer;font-family:inherit}
+.b-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px;padding-bottom:4px}
+.b-hero{position:relative;overflow:hidden;border-radius:18px;padding:22px 24px 20px;
+  background:
+    radial-gradient(120% 160% at 100% 0%, color-mix(in srgb,var(--tone) 16%, transparent), transparent 62%),
+    color-mix(in srgb,var(--tone) 7%, var(--dsw-alias-bg-layer-1));
+  border:.5px solid color-mix(in srgb,var(--tone) 24%, var(--dsw-alias-border-l1))}
+.b-hero-top{display:flex;align-items:flex-start;gap:16px}
+.b-hero-main{display:flex;flex-direction:column;gap:2px}
+.b-hero-kicker{font-size:11px;letter-spacing:.5px;color:var(--dsw-alias-label-secondary);display:flex;align-items:center;gap:7px}
+.b-hero-kicker .dot{width:5px;height:5px;border-radius:50%;background:var(--tone)}
+.b-big{font-size:58px;line-height:60px;font-weight:600;letter-spacing:-2px;font-variant-numeric:tabular-nums;color:var(--dsw-alias-label-primary)}
+.b-big span{font-size:22px;font-weight:500;color:var(--dsw-alias-label-secondary);letter-spacing:0;margin-left:2px}
+.b-big em{font-style:normal;font-size:10px;letter-spacing:1.3px;color:var(--dsw-alias-label-secondary);margin-left:8px;vertical-align:middle}
+.b-hero-meta{font-size:11px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums;margin-top:2px}
+.b-hero-side{margin-left:auto;text-align:right;display:flex;flex-direction:column;gap:4px;padding-top:8px}
+.b-proj-label{font-size:10px;letter-spacing:.4px;color:var(--dsw-alias-label-secondary)}
+.b-proj{font-size:19px;font-weight:600;color:var(--dsw-alias-state-error-primary);font-variant-numeric:tabular-nums;line-height:22px}
+.b-proj small{font-size:10px;font-weight:400;color:var(--dsw-alias-state-error-primary);opacity:.85;display:block;line-height:14px}
+.b-herobar{position:relative;height:8px;border-radius:999px;background:color-mix(in srgb,var(--dsw-alias-bg-layer-2) 80%, transparent);margin-top:18px;overflow:hidden}
+.b-herobar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:var(--tone)}
+.b-herobar .over{position:absolute;left:33%;right:0;top:0;bottom:0;
+  background:repeating-linear-gradient(115deg, color-mix(in srgb,var(--dsw-alias-state-error-primary) 38%,transparent) 0 2px, transparent 2px 6px)}
+.b-rows{display:flex;flex-direction:column}
+.b-row{display:flex;align-items:center;gap:14px;padding:15px 2px;border-bottom:.5px solid var(--dsw-alias-border-l1)}
+.b-rows .b-row:last-child{border-bottom:none}
+.b-rname{width:56px;flex:none;font-size:12px;color:var(--dsw-alias-label-primary)}
+.b-rbar{flex:1;height:5px;border-radius:999px;background:var(--dsw-alias-bg-layer-2);position:relative;overflow:hidden}
+.b-rbar i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:var(--tone);display:block}
+.b-rval{width:40px;text-align:right;font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--tone)}
+.b-rmeta{width:92px;flex:none;text-align:right;font-size:11px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.b-setting{display:flex;align-items:center;gap:14px;padding:11px 18px;border-radius:12px;
+  border:.5px solid var(--dsw-alias-border-l1);background:var(--dsw-alias-bg-layer-1)}
+.b-setting span{font-size:12px;color:var(--dsw-alias-label-primary)}
+.b-setting .sp{flex:1}
+.b-switch{position:relative;flex:none;width:36px;height:20px;border-radius:999px;border:none;padding:0;background:var(--dsw-alias-brand-primary);cursor:pointer}
+.b-switch::after{content:"";position:absolute;top:2px;left:18px;width:16px;height:16px;border-radius:50%;background:var(--dsw-alias-bg-base)}
+.b-foot{display:flex;justify-content:space-between;font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary);padding:0 2px}
+
+/* option B dock: one capsule, most urgent window */
+.dockB{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:3px 11px 3px 10px;
+  border:.5px solid color-mix(in srgb,var(--dsw-alias-state-error-primary) 26%, var(--dsw-alias-border-l1));
+  background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%, var(--dsw-alias-bg-layer-1));
+  font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary);cursor:pointer;font-variant-numeric:tabular-nums}
+.dockB .warn{width:13px;height:13px;color:var(--dsw-alias-state-error-primary)}
+.dockB b{font-weight:600;color:var(--dsw-alias-label-primary)}
+.dockB .meter{width:34px;height:3px;border-radius:999px;background:var(--dsw-alias-bg-layer-2);overflow:hidden;display:inline-block}
+.dockB .meter i{display:block;height:100%;width:33%;background:var(--dsw-alias-state-error-primary)}
+
+/* ================= OPTION C — typographic minimal ================= */
+.c-page{height:100%;padding:26px 48px 16px;display:flex;flex-direction:column;background:var(--dsw-alias-bg-base)}
+.c-inner{width:100%;max-width:580px;margin:0 auto;display:flex;flex-direction:column;height:100%}
+.c-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.c-title{font-size:11.5px;font-weight:500;letter-spacing:1.6px;text-transform:uppercase;color:var(--dsw-alias-label-secondary)}
+.c-updated{font-size:10.5px;letter-spacing:.4px;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));font-variant-numeric:tabular-nums}
+.c-row{display:flex;align-items:flex-end;gap:18px;padding:22px 0 30px;border-top:.5px solid var(--dsw-alias-border-l1);position:relative;flex:none;min-height:140px}
+.c-rows{flex:1;display:flex;flex-direction:column;justify-content:center}
+.c-row:first-of-type{border-top:none}
+.c-left{display:flex;flex-direction:column;gap:3px;min-width:0;padding-bottom:4px;flex:none;width:104px}
+.c-cap{font-size:10px;letter-spacing:1.2px;color:var(--dsw-alias-label-secondary);margin-left:6px;align-self:baseline}
+.c-name{font-size:11.5px;letter-spacing:.6px;color:var(--dsw-alias-label-secondary)}
+.c-reset{font-size:10.5px;letter-spacing:.2px;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));font-variant-numeric:tabular-nums}
+.c-numwrap{margin-left:auto;display:flex;align-items:baseline;gap:2px}
+.c-num{font-size:46px;line-height:46px;font-weight:300;letter-spacing:-2px;font-variant-numeric:tabular-nums;color:var(--dsw-alias-label-primary)}
+.c-num span{font-size:14px;font-weight:400;letter-spacing:0;color:var(--dsw-alias-label-secondary);margin-left:1px}
+.c-num.low{color:var(--dsw-alias-state-warn-primary)}
+.c-meter{position:absolute;left:0;right:0;bottom:13px;height:1.5px;background:var(--dsw-alias-border-l2);border-radius:2px}
+.c-meter i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:var(--dsw-alias-label-primary);opacity:.8}
+.c-meter .proj{position:absolute;top:-4px;width:2px;height:10px;background:var(--dsw-alias-state-error-primary);border-radius:1px}
+.c-meter .over{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 40%,transparent)}
+.c-foot{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:.3px;color:var(--dsw-alias-label-tertiary,var(--dsw-alias-label-secondary));padding:12px 0 0}
+.c-setting{display:flex;align-items:center;gap:10px;padding:12px 0 2px;border-top:.5px solid var(--dsw-alias-border-l1);font-size:11.5px;color:var(--dsw-alias-label-secondary)}
+.c-setting .sp{flex:1}
+
+/* option C dock: plain numbers */
+.dockC{display:inline-flex;align-items:baseline;gap:12px;font-size:11px;line-height:16px;letter-spacing:.3px;
+  color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums;cursor:pointer}
+.dockC b{font-weight:500;color:var(--dsw-alias-label-primary)}
+.dockC .low b{color:var(--dsw-alias-state-warn-primary)}
+.dockC .sep{width:1px;height:9px;background:var(--dsw-alias-border-l2);display:inline-block;align-self:center}
+</style>
+</head>
+<body data-ds-dark-theme>
+
+<div class="sheet">
+  <div class="sheet-head">
+    <div class="sheet-title">OpenCode 额度 · 视觉与信息层级方案</div>
+    <div class="sheet-note">示意图 · 用 DSH 真实主题 token 渲染（暗色 / 浅色各一张）<br>示例数据：5h 94% · 本周 93% · 本月 33%，本月按当前速度预计超额</div>
+  </div>
+
+  <div class="grid">
+
+    <!-- ============ 0. current ============ -->
+    <div class="cell">
+      <div class="cap"><span class="cap-tag">现状</span><span class="cap-txt"><b>文字承担了信息</b>：页面 30+ 段文案，指标与解释同字号同颜色；卡片重复「已用 / 剩余 / 倒计时 / 绝对时间」</span></div>
+      <div class="frame">
+        <div class="rail">
+          <div class="rail-logo">D</div>
+          <div class="rail-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/></svg></div>
+          <div class="rail-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M8 9h8M8 13h5" stroke-linecap="round"/></svg></div>
+          <div class="rail-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.8 17.2a8.4 8.4 0 1 1 16.4 0"/><path d="M12 17.2l4.3-4.8"/><circle cx="12" cy="17.2" r="1.35" fill="currentColor" stroke="none"/></svg></div>
+          <div class="rail-spacer"></div>
+        </div>
+        <div class="main">
+          <div class="page">
+            <div class="ocq-page">
+              <div class="ocq-head">
+                <div>
+                  <div class="ocq-title">OpenCode 额度</div>
+                  <div class="ocq-sub">OpenCode Go 订阅用量 · 5 小时窗口、每周、每月</div>
+                </div>
+                <button class="ocq-btn">刷新</button>
+              </div>
+              <div class="ocq-cards">
+                <div class="ocq-card" style="--ocq-tone:var(--dsw-alias-state-success-primary)">
+                  <div class="ocq-card-row"><span class="ocq-card-name">5 小时窗口</span><span class="ocq-card-value"><span class="ocq-card-unit">剩余</span><span class="ocq-card-remaining">94%</span></span></div>
+                  <div class="ocq-bar"><div class="ocq-bar-fill" style="width:6%"></div></div>
+                  <div class="ocq-meta"><span>已用 6%</span><span>重置 2小时30分</span></div>
+                  <div class="ocq-meta"><span>2026/11/10 21:00:00</span></div>
+                </div>
+                <div class="ocq-card" style="--ocq-tone:var(--dsw-alias-state-success-primary)">
+                  <div class="ocq-card-row"><span class="ocq-card-name">本周</span><span class="ocq-card-value"><span class="ocq-card-unit">剩余</span><span class="ocq-card-remaining">93%</span></span></div>
+                  <div class="ocq-bar"><div class="ocq-bar-fill" style="width:7%"></div></div>
+                  <div class="ocq-meta"><span>已用 7%</span><span>重置 6天3小时</span></div>
+                  <div class="ocq-meta"><span>2026/11/17 00:00:00</span></div>
+                </div>
+                <div class="ocq-card" style="--ocq-tone:var(--dsw-alias-state-warn-primary)">
+                  <div class="ocq-card-row"><span class="ocq-card-name">本月</span><span class="ocq-card-value"><span class="ocq-card-unit">剩余</span><span class="ocq-card-remaining">33%</span></span></div>
+                  <div class="ocq-bar"><div class="ocq-bar-fill" style="width:67%"></div></div>
+                  <div class="ocq-meta"><span>已用 67%</span><span>重置 12天4小时</span></div>
+                  <div class="ocq-meta"><span>2026/11/23 00:00:00</span></div>
+                </div>
+              </div>
+              <div class="ocq-section">
+                <div class="ocq-section-head"><span class="ocq-section-title">用量预测</span><span class="ocq-section-note">按本周期平均消耗外推，突发用量不参与计算</span></div>
+                <div class="ocq-forecast-grid">
+                  <div class="ocq-forecast-item"><span class="ocq-forecast-name">5 小时窗口</span><span class="ocq-forecast-value">预计期末 41%</span><span class="ocq-forecast-note">平均 3.6%/小时 · 重置 2小时30分</span></div>
+                  <div class="ocq-forecast-item"><span class="ocq-forecast-name">本周</span><span class="ocq-forecast-value">预计期末 52%</span><span class="ocq-forecast-note">平均 4.0%/天 · 重置 6天3小时</span></div>
+                  <div class="ocq-forecast-item"><span class="ocq-forecast-name">本月</span><span class="ocq-forecast-value ocq-danger">预计期末 118% · 会超配额</span><span class="ocq-forecast-note">平均 2.8%/天 · 重置 12天4小时</span></div>
+                </div>
+              </div>
+              <div class="ocq-setting">
+                <div class="ocq-setting-label"><span class="ocq-setting-title">在输入框左上方显示额度徽章</span><span class="ocq-setting-desc">关闭后只保留侧边栏入口，随时可以重新打开。</span></div>
+                <button class="ocq-switch" aria-checked="true"></button>
+              </div>
+              <div class="ocq-foot"><span>更新于 18:30:22</span><span>数据来自 opencode.ai，每 5 分钟自动刷新。</span></div>
+            </div>
+          </div>
+          <div class="composer">
+            <div class="dock-row">
+              <div class="ocq-dock">
+                <button class="ocq-chip"><span class="ocq-chip-dot" style="--ocq-tone:var(--dsw-alias-state-success-primary)"></span><span>5h</span><span class="ocq-chip-value">94%</span></button>
+                <button class="ocq-chip"><span class="ocq-chip-dot" style="--ocq-tone:var(--dsw-alias-state-success-primary)"></span><span>周</span><span class="ocq-chip-value">93%</span></button>
+                <button class="ocq-chip"><span class="ocq-chip-dot" style="--ocq-tone:var(--dsw-alias-state-warn-primary)"></span><span>月</span><span class="ocq-chip-value">33%</span></button>
+              </div>
+            </div>
+            <div class="inputbox">给 DSH 发消息…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ A. calm instrument ============ -->
+    <div class="cell" id="optA">
+      <div class="cap"><span class="cap-tag">A · 冷静仪表</span><span class="cap-txt"><b>形状替文字说话</b>：三个同构环形表盘 + 每环一行「预计用到」，只留窗口名 / 大数字 / 倒计时 / 预测四个要素</span></div>
+      <div class="frame">
+        <div class="rail">
+          <div class="rail-logo">D</div>
+          <div class="rail-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/></svg></div>
+          <div class="rail-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M8 9h8M8 13h5" stroke-linecap="round"/></svg></div>
+          <div class="rail-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.8 17.2a8.4 8.4 0 1 1 16.4 0"/><path d="M12 17.2l4.3-4.8"/><circle cx="12" cy="17.2" r="1.35" fill="currentColor" stroke="none"/></svg></div>
+          <div class="rail-spacer"></div>
+        </div>
+        <div class="main">
+          <div class="page">
+            <div class="a-page">
+              <div class="a-head">
+                <span class="a-title">OpenCode 额度</span>
+                <span class="a-updated">18:30 更新</span>
+                <button class="a-iconbtn" aria-label="刷新"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/></svg></button>
+              </div>
+
+              <div class="a-body">
+                <div class="a-panel">
+                  <div class="a-cell tone-ok">
+                    <span class="a-name">5 小时</span>
+                    <div class="a-ringwrap">
+                      <svg class="a-ring" width="150" height="150" viewBox="0 0 150 150">
+                        <circle class="a-track" cx="75" cy="75" r="60"/>
+                        <circle class="a-arc" cx="75" cy="75" r="60" stroke-dasharray="354 377"/>
+                      </svg>
+                      <div class="a-center"><div class="line"><span class="a-num">94</span><span class="a-pct">%</span></div><span class="a-cap">剩余</span></div>
+                    </div>
+                    <span class="a-reset"><b>2 小时 30 分</b> 后重置</span>
+                    <span class="a-forecast">预计用到 <b>41%</b></span>
+                  </div>
+                  <div class="a-cell tone-ok">
+                    <span class="a-name">本周</span>
+                    <div class="a-ringwrap">
+                      <svg class="a-ring" width="150" height="150" viewBox="0 0 150 150">
+                        <circle class="a-track" cx="75" cy="75" r="60"/>
+                        <circle class="a-arc" cx="75" cy="75" r="60" stroke-dasharray="350 377"/>
+                      </svg>
+                      <div class="a-center"><div class="line"><span class="a-num">93</span><span class="a-pct">%</span></div><span class="a-cap">剩余</span></div>
+                    </div>
+                    <span class="a-reset"><b>6 天 3 小时</b> 后重置</span>
+                    <span class="a-forecast">预计用到 <b>52%</b></span>
+                  </div>
+                  <div class="a-cell tone-warn">
+                    <span class="a-name">本月</span>
+                    <div class="a-ringwrap">
+                      <svg class="a-ring" width="150" height="150" viewBox="0 0 150 150">
+                        <circle class="a-track" cx="75" cy="75" r="60"/>
+                        <circle class="a-arc" cx="75" cy="75" r="60" stroke-dasharray="124 377"/>
+                      </svg>
+                      <div class="a-center"><div class="line"><span class="a-num">33</span><span class="a-pct">%</span></div><span class="a-cap">剩余</span></div>
+                    </div>
+                    <span class="a-reset"><b>12 天 4 小时</b> 后重置</span>
+                    <span class="a-forecast danger">预计用到 <b>118%</b></span>
+                  </div>
+                </div>
+
+                <div class="a-setting">
+                  <span>输入框徽章</span><span class="sp"></span>
+                  <button class="a-switch" aria-checked="true"></button>
+                </div>
+                <div class="a-foot"><span>数据来自 opencode.ai</span><span>每 5 分钟自动刷新</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="composer">
+            <div class="dock-row">
+              <div class="dockA">
+                <span class="seg tone-ok"><i></i>5h<b>94%</b></span>
+                <span class="seg tone-ok"><i></i>周<b>93%</b></span>
+                <span class="seg tone-warn"><i></i>月<b>33%</b></span>
+              </div>
+            </div>
+            <div class="inputbox">给 DSH 发消息…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ B. hero + rows ============ -->
+    <div class="cell">
+      <div class="cap"><span class="cap-tag">B · 主角突出</span><span class="cap-txt"><b>最紧张的一条说了算</b>：最紧的窗口自动放大成主角，其余收成单行；斜纹标出「按当前速度会被用掉」的额度</span></div>
+      <div class="frame">
+        <div class="rail">
+          <div class="rail-logo">D</div>
+          <div class="rail-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/></svg></div>
+          <div class="rail-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M8 9h8M8 13h5" stroke-linecap="round"/></svg></div>
+          <div class="rail-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.8 17.2a8.4 8.4 0 1 1 16.4 0"/><path d="M12 17.2l4.3-4.8"/><circle cx="12" cy="17.2" r="1.35" fill="currentColor" stroke="none"/></svg></div>
+          <div class="rail-spacer"></div>
+        </div>
+        <div class="main">
+          <div class="page">
+            <div class="b-page">
+              <div class="b-head">
+                <span class="b-title">OpenCode 额度</span>
+                <span class="sp"></span>
+                <span class="b-updated">18:30</span>
+                <button class="b-refresh">刷新</button>
+              </div>
+
+              <div class="b-body">
+              <div class="b-hero tone-warn">
+                <div class="b-hero-top">
+                  <div class="b-hero-main">
+                    <span class="b-hero-kicker"><span class="dot"></span>本月 · 最紧张</span>
+                    <div class="b-big">33<span>%</span><em class="b-cap">剩余</em></div>
+                    <span class="b-hero-meta">12 天 4 小时后重置</span>
+                  </div>
+                  <div class="b-hero-side">
+                    <span class="b-proj-label">按当前速度，期末</span>
+                    <span class="b-proj">118%<small>会超出配额</small></span>
+                  </div>
+                </div>
+                <div class="b-herobar"><span class="fill" style="width:33%"></span><span class="over"></span></div>
+              </div>
+
+              <div class="b-rows">
+                <div class="b-row tone-ok">
+                  <span class="b-rname">5 小时</span>
+                  <span class="b-rbar"><i style="width:94%"></i></span>
+                  <span class="b-rval">94%</span>
+                  <span class="b-rmeta">2 小时 30 分</span>
+                </div>
+                <div class="b-row tone-ok">
+                  <span class="b-rname">本周</span>
+                  <span class="b-rbar"><i style="width:93%"></i></span>
+                  <span class="b-rval">93%</span>
+                  <span class="b-rmeta">6 天 3 小时</span>
+                </div>
+              </div>
+
+              <div class="b-setting">
+                <span>输入框徽章</span><span class="sp"></span>
+                <button class="b-switch" aria-checked="true"></button>
+              </div>
+              <div class="b-foot"><span>数据来自 opencode.ai</span><span>每 5 分钟自动刷新</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="composer">
+            <div class="dock-row">
+              <div class="dockB">
+                <svg class="warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5 21 20H3z"/><path d="M12 10v4.2"/><circle cx="12" cy="17.4" r=".9" fill="currentColor" stroke="none"/></svg>
+                <span>本月剩 <b>33%</b></span>
+                <span class="meter"><i></i></span>
+                <span>12 天</span>
+              </div>
+            </div>
+            <div class="inputbox">给 DSH 发消息…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ C. typographic minimal ============ -->
+    <div class="cell">
+      <div class="cap"><span class="cap-tag">C · 排印极简</span><span class="cap-txt"><b>无卡片、无边框</b>：大号数字 + 1.5px 细线，靠字阶和留白排序；颜色只用在「低额度」那一行</span></div>
+      <div class="frame">
+        <div class="rail">
+          <div class="rail-logo">D</div>
+          <div class="rail-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/></svg></div>
+          <div class="rail-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="4.5" width="17" height="15" rx="3"/><path d="M8 9h8M8 13h5" stroke-linecap="round"/></svg></div>
+          <div class="rail-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.8 17.2a8.4 8.4 0 1 1 16.4 0"/><path d="M12 17.2l4.3-4.8"/><circle cx="12" cy="17.2" r="1.35" fill="currentColor" stroke="none"/></svg></div>
+          <div class="rail-spacer"></div>
+        </div>
+        <div class="main">
+          <div class="page">
+            <div class="c-page">
+              <div class="c-inner">
+                <div class="c-head"><span class="c-title">额度</span><span class="c-updated">18:30 · OPENCODE.AI</span></div>
+
+                <div class="c-rows">
+                <div class="c-row">
+                  <div class="c-left"><span class="c-name">5 小时</span><span class="c-reset">2 小时 30 分后重置</span></div>
+                  <div class="c-numwrap"><span class="c-num">94<span>%</span></span><span class="c-cap">剩余</span></div>
+                  <div class="c-meter"><i style="width:94%"></i></div>
+                </div>
+
+                <div class="c-row">
+                  <div class="c-left"><span class="c-name">本周</span><span class="c-reset">6 天 3 小时后重置</span></div>
+                  <div class="c-numwrap"><span class="c-num">93<span>%</span></span><span class="c-cap">剩余</span></div>
+                  <div class="c-meter"><i style="width:93%"></i></div>
+                </div>
+
+                <div class="c-row">
+                  <div class="c-left"><span class="c-name">本月</span><span class="c-reset">12 天 4 小时后重置</span></div>
+                  <div class="c-numwrap"><span class="c-num low">33<span>%</span></span><span class="c-cap">剩余</span></div>
+                  <div class="c-meter"><i style="width:33%"></i><span class="over" style="left:33%;right:0"></span></div>
+                </div>
+                </div>
+
+                <div class="c-setting"><span>输入框徽章</span><span class="sp"></span>
+                  <button class="a-switch" aria-checked="true"></button>
+                </div>
+
+                <div class="c-foot"><span>数据来自 opencode.ai</span><span>每 5 分钟自动刷新</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="composer">
+            <div class="dock-row">
+              <div class="dockC">
+                <span>5h <b>94</b>%</span><span class="sep"></span>
+                <span>周 <b>93</b>%</span><span class="sep"></span>
+                <span class="low">月 <b>33</b>%</span>
+              </div>
+            </div>
+            <div class="inputbox">给 DSH 发消息…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

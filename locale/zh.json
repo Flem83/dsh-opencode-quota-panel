@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "OpenCode 额度",
+    "description": "显示 OpenCode Go 订阅的 5 小时窗口、每周、每月额度用量，并给出重置倒计时。"
+  }
+}

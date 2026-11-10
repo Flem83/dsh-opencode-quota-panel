@@ -1,0 +1,5 @@
+# OpenCode Go 额度插件：一行入口同时提供 Host 半（同源只读路由）与
+# Client 半（侧边栏条目、额度页面、输入框上方徽章）。
+- insert:
+    - id: opencode-quota
+      name: 'dsh-opencode-quota-panel'
