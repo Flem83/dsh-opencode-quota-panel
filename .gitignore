@@ -4,6 +4,14 @@ node_modules/
 .tmp-asar/
 .plugin-manager/
 *.log
+*.tgz
+
+# 本地凭据（绝不入库）
+.npmrc
+.npmrc.*
+.publish.env
+.env
+.env.*
 
 # 本地开发/调研产物，不随仓库发布
 design/_verify/
