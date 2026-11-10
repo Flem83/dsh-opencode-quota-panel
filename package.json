@@ -4,6 +4,15 @@
   "type": "module",
   "description": "Shows the OpenCode Go subscription quota (5-hour, weekly, monthly windows) in the DSH Web UI. · 在 DSH 网页界面中显示 OpenCode Go 订阅额度。",
   "license": "MIT",
+  "author": "Flem83",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flem83/dsh-opencode-quota-panel.git"
+  },
+  "homepage": "https://github.com/Flem83/dsh-opencode-quota-panel#readme",
+  "bugs": {
+    "url": "https://github.com/Flem83/dsh-opencode-quota-panel/issues"
+  },
   "keywords": [
     "dsh",
     "dsh-plugin",

@@ -1,5 +1,9 @@
 # OpenCode 额度（dsh-opencode-quota-panel）
 
+[![npm version](https://img.shields.io/npm/v/dsh-opencode-quota-panel.svg)](https://www.npmjs.com/package/dsh-opencode-quota-panel)
+[![license](https://img.shields.io/npm/l/dsh-opencode-quota-panel.svg)](LICENSE)
+[![dsh](https://img.shields.io/badge/dsh-plugin-8A2BE2)](https://github.com/Flem83/dsh-opencode-quota-panel)
+
 在 DSH 网页界面里显示 **OpenCode Go 订阅额度**：5 小时滚动窗口、本周、本月三条用量，带重置倒计时、用量预测、明细表，以及模型选择框旁的额度徽章。
 
 ## 能力
@@ -100,7 +104,7 @@ dsh plugin --profile <profile> add dsh-opencode-quota-panel
 **从 GitHub 安装（不经过 npm）**
 
 ```powershell
-dsh plugin --profile <profile> add "github:<你的GitHub用户名>/<仓库名>#v1.0.0"
+dsh plugin --profile <profile> add "github:Flem83/dsh-opencode-quota-panel#v1.0.0"
 ```
 
 **开发时从本地目录安装**
